@@ -1,8 +1,9 @@
 package com.revature.Model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Gremlin {
+public class Gremlin implements Serializable {
 
     /*Variables declaration
         Declaring variables which are attributes for each gremlin objects with their datatype
