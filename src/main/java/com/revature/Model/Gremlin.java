@@ -69,12 +69,12 @@ public class Gremlin implements Serializable {
         return this;
     }
 
-    public Boolean getEvil() {
+    public Boolean getIsEvil() {
         return isEvil;
     }
 
-    public Gremlin setEvil(Boolean evil) {
-        isEvil = evil;
+    public Gremlin setIsEvil(Boolean isEvil) {
+        this.isEvil = isEvil;
         return this;
     }
 
