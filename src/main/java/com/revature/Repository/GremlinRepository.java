@@ -14,12 +14,12 @@ public class GremlinRepository implements DAO<Gremlin>{
     private static final Logger logger = LoggerFactory.getLogger(GremlinRepository.class);
 
     @Override
-    public Gremlin create(Gremlin gremlin) {
+    public Boolean create(Gremlin gremlin) {
 
         try(Connection connection = ConnectionUtility.getMyConnection()){
 
             String Sql = "insert into gremlins(name, age, color, isevil) values(?,?,?,?)";
-            PreparedStatement statement = connection.prepareStatement(Sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(Sql);
 
             statement.setString(1, gremlin.getName());
             statement.setInt(2, gremlin.getAge());
@@ -27,12 +27,7 @@ public class GremlinRepository implements DAO<Gremlin>{
             statement.setBoolean(4, gremlin.getIsEvil());
 
             int success = statement.executeUpdate();
-
-            ResultSet keys = statement.getGeneratedKeys();
-            if(keys.next()){
-                int id = keys.getInt(1);
-                return gremlin.setId(id);
-            }
+            return success != 0;
 
 
         }catch (SQLException e){
@@ -45,13 +40,13 @@ public class GremlinRepository implements DAO<Gremlin>{
     public List<Gremlin> getAll() {
 
         List<Gremlin> gremlins = new ArrayList<>();
-        String Sql = "select * from gremlims";
+        String Sql = "select * from gremlins";
 
         try(Connection connection = ConnectionUtility.getMyConnection()){
 
-            PreparedStatement statement = connection.prepareStatement(Sql);
+            PreparedStatement stmt = connection.prepareStatement(Sql);
 
-            ResultSet results = statement.executeQuery();
+            ResultSet results = stmt.executeQuery();
 
             while(results.next()){
                 Gremlin gremlin = new Gremlin();
@@ -59,7 +54,8 @@ public class GremlinRepository implements DAO<Gremlin>{
                 gremlin.setName(results.getString("name"));
                 gremlin.setAge(results.getInt("age"));
                 gremlin.setColor(results.getString("color"));
-                gremlin.setIsEvil(results.getBoolean("is evil"));
+                gremlin.setIsEvil(results.getBoolean("isevil"));
+                gremlin.setId(results.getInt("gremlin_id"));
 
                 gremlins.add(gremlin);
 
